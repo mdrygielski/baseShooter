@@ -11,10 +11,9 @@ public class RoomManager : MonoBehaviour {
     static Transform rootParent;
 
 
-	// Use this for initialization
+
 	void Start () {
         //find Root object to carry all rooms;
-        //rootParent = GameObject.Find("RoomManager").transform;
         rootParent = gameObject.transform;
 
         //RoomLimit = 100;

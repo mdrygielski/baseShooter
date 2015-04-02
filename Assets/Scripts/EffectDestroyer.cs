@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/*
+ * Destroying particle system component after time of duration
+ * 
+ * 
+ * */
+
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(ParticleSystem))]
@@ -14,10 +20,9 @@ public class EffectDestroyer : MonoBehaviour {
 
         ps = GetComponent<ParticleSystem>();
         timer = ps.duration;
-        //AutoDestruct();
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
         timer -= 0.01f;
         if (timer < 0)
@@ -27,12 +32,4 @@ public class EffectDestroyer : MonoBehaviour {
 
 	}
 
-    /*
-    IEnumerator AutoDestruct()
-     {
-         Destroy(gameObject);
-         yield return new WaitForSeconds(ps.duration);
-         
-     }
-     * */
 }

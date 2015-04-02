@@ -3,7 +3,7 @@
  * 
  * 
  * To do:
- * keep parent moving with childer
+ * 
  * 
  * */
 
@@ -17,9 +17,10 @@ public class PlayerController : MonoBehaviour {
     //player movement speed
     public float sensivity;
 
+    //components
     CharacterController controller;
     NetworkView networkView;
-    //public Camera playerCamera;
+    Camera playerCamera;
 
 
 
@@ -28,19 +29,45 @@ public class PlayerController : MonoBehaviour {
     Vector3 pointToLookAt;
     Vector3 startPoint;
     float shootDistance;
+    Quaternion playerCameraRotation;
 
 
-    //effects
-    //public ParticleSystem hitEffect;
+
+    void Awake()
+    {
+        //get components and carry about camera to not possess only by owner
+        networkView = GetComponentInParent<NetworkView>();
+        playerCamera = GetComponentInChildren<Camera>();
+        playerCameraRotation = playerCamera.transform.rotation;
+        if (networkView.isMine)
+        {
+
+            playerCamera.enabled = true;
+        }
+        else
+        {
+
+            playerCamera.enabled = false;
+        }
+    }
+
+
+    void LateUpdate()
+    {
+        //keep camera rotation in initialized rotation
+        if (networkView.isMine)
+        {
+
+            playerCamera.transform.rotation = playerCameraRotation;
+        }
+       
+    }
 
 	void Start () {
-        controller = GetComponent<CharacterController>();
-        //networkView = GetComponent<NetworkView>();
-        networkView = GetComponentInParent<NetworkView>();
 
-        
-       
-        
+        //get rest of components
+        controller = GetComponent<CharacterController>();
+                
 	}
 	
 
@@ -52,21 +79,14 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
-        //keep camera along to player
-        Camera.main.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
-        Camera.main.transform.position = new Vector3(gameObject.transform.position.x, 18, gameObject.transform.position.z);
-
-        
-
-        
+       
         //get mouse position
         pointToLookAt = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.y-gameObject.transform.position.y));
         
         //rotate player along with mouse cursor
         gameObject.transform.rotation = Quaternion.LookRotation(pointToLookAt - transform.position, Vector3.up);
 
-        //set shootDistance, after tests that distance will be constant
-        //shootDistance = Vector3.Distance(transform.position, pointToLookAt);
+        //set shootDistance, after tests that distance will be constant or will depend on kind of weapon
         shootDistance = 30;
         Vector3 direction = transform.TransformDirection(Vector3.forward * shootDistance);
 
@@ -80,13 +100,7 @@ public class PlayerController : MonoBehaviour {
                 Debug.Log("Shot Fired");
              
                     ParticleSystem hitEffect = (ParticleSystem)Network.Instantiate(Resources.Load("Effects/hitEffect"), hit.point, Quaternion.identity,0);
-                    //Destroy(hitEffect, hitEffect.duration);
-               
-
-
-
-
-                //Debug.Log(hit.transform.gameObject);
+                    //destroying that effect is implemented in script attached to this prefab
             }
         }
         
@@ -94,34 +108,24 @@ public class PlayerController : MonoBehaviour {
        
         //simple movement of player object
 
-
         if (Input.GetKey(KeyCode.W))
         {
 
-            //Vector3 forward = transform.TransformDirection(Vector3.forward);
-            //controller.SimpleMove(forward * sensivity);
-           
             controller.SimpleMove(Vector3.forward * sensivity);
             
         }
         if (Input.GetKey(KeyCode.S))
         {
-            //Vector3 backward = transform.TransformDirection(Vector3.back);
-            //controller.SimpleMove(backward * sensivity);
 
             controller.SimpleMove(Vector3.back * sensivity);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            //Vector3 left = transform.TransformDirection(Vector3.left);
-            //controller.SimpleMove(left * sensivity);
 
             controller.SimpleMove(Vector3.left * sensivity);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            //Vector3 right = transform.TransformDirection(Vector3.right);
-            //controller.SimpleMove(right * sensivity);
 
             controller.SimpleMove(Vector3.right * sensivity);
         }
@@ -131,17 +135,10 @@ public class PlayerController : MonoBehaviour {
 
     void OnDrawGizmos()
     {
-        Vector3 startPoint = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         Gizmos.color = Color.red;
-       // Vector3 pos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 2);
-        Vector3 direction = transform.TransformDirection(Vector3.forward* shootDistance);
-        //Vector3 direction = pointToLookAt- transform.position;
-        Collider col = GetComponent<Collider>();
-        //Vector3 direction = (Vector3.forward * shootDistance) - pos;
-        Vector3 pos = startPoint+(Vector3.forward*2);
-        //Vector3 direction = (pos - transform.position).normalized * shootDistance;
-        //Gizmos.DrawRay(transform.localPosition, direction);
+
+        Vector3 direction = transform.TransformDirection(Vector3.forward * shootDistance);
         Gizmos.DrawLine(transform.position, direction);
-        //Debug.Log(pos);
+
     }
 }
