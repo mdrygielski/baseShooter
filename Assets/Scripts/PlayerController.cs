@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour {
             if (Physics.Raycast(transform.position, direction, out hit))
             {
                 Debug.Log("Shot Fired");
-             
+                Debug.Log(hit.collider.name);
                     ParticleSystem hitEffect = (ParticleSystem)Network.Instantiate(Resources.Load("Effects/hitEffect"), hit.point, Quaternion.identity,0);
                     //destroying that effect is implemented in script attached to this prefab
             }

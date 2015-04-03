@@ -42,7 +42,7 @@ public class Room : MonoBehaviour {
         roomsCreated = 0;
 
         //roomsWasCreated = false;
-        roomsToCreate = Random.Range(1, 4);
+        roomsToCreate = Random.Range(2, 4);
 
         directionsToCreate = new Direction[roomsToCreate];
         //Debug.Log("Rooms to create:" + roomsToCreate + "len"+directionsToCreate.Length);
