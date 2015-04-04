@@ -14,6 +14,13 @@ public class Room : MonoBehaviour {
         
     };
 
+    //way number which means ID of maze part
+    public int wayId;
+
+    //carry how far is this room from init room
+    public int distance;
+
+
     //public Direction entrance;
     //public Direction[] entrances = new Direction[4];
     //GameObject wallN, wallE, wallS, wallW, collumn0, collumn1, collumn2, collumn3;
@@ -29,9 +36,17 @@ public class Room : MonoBehaviour {
 
     bool isWaiting;
 
+    
+    public bool isInitRoom;
 
 
 	// Use this for initialization
+
+    void Awake()
+    {
+
+    }
+
 	void Start () {
 
         
@@ -41,31 +56,36 @@ public class Room : MonoBehaviour {
         roomStep = 15f;
         roomsCreated = 0;
 
-        //roomsWasCreated = false;
+
         roomsToCreate = Random.Range(2, 4);
 
-        directionsToCreate = new Direction[roomsToCreate];
-        //Debug.Log("Rooms to create:" + roomsToCreate + "len"+directionsToCreate.Length);
-        initiateRoom();
 
+        //only if its init room, set number of outgoing ways
+        if (wayId == -1)
+        {
+            isInitRoom = true;
+            RoomManager.setWays(roomsToCreate);
+        }
+        else
+        {
+            isInitRoom = false;
+        }
+
+        directionsToCreate = new Direction[roomsToCreate];
+
+        //random directions to create next room
         setDirections();
 
 
 
-
-
-
-        //Debug.Log(directionsToCreate[roomsCreated]);
-       
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
         if (!RoomManager.limitReached())
         {
             if (!myJobIsDone())
             {
-                //Debug.Log(RoomManager.rooms.Count);
                 createRooms();
             }
             else
@@ -97,10 +117,17 @@ public class Room : MonoBehaviour {
                     removeWall(Direction.N, true);
                     room.removeWall(Direction.S);
 
+                    
+
 
                     isWaiting = false;
 
                     RoomManager.addRoom(roomObj);
+
+
+
+                    RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
+                    
 
                 }
                 
@@ -124,6 +151,8 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+
+                    RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
                 }
             }else if (directionsToCreate[roomsCreated] == Direction.S)
@@ -143,6 +172,8 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+
+                    RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
                 }
             }else if (directionsToCreate[roomsCreated] == Direction.W)
@@ -162,6 +193,8 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+
+                    RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
                 }
             }
@@ -214,11 +247,6 @@ public class Room : MonoBehaviour {
         }
     }
 
-    public void initiateRoom()
-    {
-
-
-    }
 
     public void removeWall(Direction _direction, bool keepCollums = false)
     {
@@ -322,5 +350,28 @@ public class Room : MonoBehaviour {
             return true;
             
         }
+    }
+
+
+    //simple setters & getters
+
+    public void setWayId(int _way){
+        wayId = _way;
+    }
+    public int getWayId()
+    {
+        return wayId;
+    }
+    public int getDistance()
+    {
+        return distance;
+    }
+    public void setDistance(int dist)
+    {
+        distance = dist;
+    }
+    public int getRoomsToCreate()
+    {
+        return roomsToCreate;
     }
 }
