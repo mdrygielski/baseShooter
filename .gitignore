@@ -198,7 +198,10 @@ FakesAssemblies/
 
 
 
-#unity files
+#----------unity files------------
+
+#compiled game files
+baseShooter_Data/
 
 
 [Ll]ibrary/
