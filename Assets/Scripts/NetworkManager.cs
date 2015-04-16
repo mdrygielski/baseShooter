@@ -27,6 +27,16 @@ public class NetworkManager : MonoBehaviour {
 
     private void StartServer()
     {
+        /*
+        string ip = "127.0.0.1";
+        //string ip = "192.168.0.152";
+        MasterServer.ipAddress = ip;
+        MasterServer.port = 23466;
+        Network.natFacilitatorIP = ip;
+        Network.natFacilitatorPort = 50005;
+        Network.connectionTesterIP = ip;
+        Network.connectionTesterPort = 10737;
+        */
         //set seed for initialize map
         mapSeed = Random.Range(0,99999);
 
@@ -43,8 +53,7 @@ public class NetworkManager : MonoBehaviour {
     public IEnumerator RefreshHostList()
     {
         //fill hostData informations about servers with was found
-
-
+        MasterServer.ClearHostList();
         Debug.Log("Refreshing...");
         MasterServer.RequestHostList(registeredGameName);
 

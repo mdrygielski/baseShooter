@@ -9,7 +9,7 @@ public class MazeGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        MazeSize = 100;
+        MazeSize = 50;
         //Random.seed = 1234567890;
        
         GameObject roomManager = new GameObject("RoomManager");

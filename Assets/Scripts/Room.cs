@@ -19,6 +19,7 @@ public class Room : MonoBehaviour {
 
     //carry how far is this room from init room
     public int distance;
+    public GameObject parent;
 
 
     //public Direction entrance;
@@ -39,16 +40,36 @@ public class Room : MonoBehaviour {
     
     public bool isInitRoom;
 
+    public bool[] walls;
+    public GameObject[] wallsArray;
+    public GameObject[] neighbours;
+    public int floorType;
+
 
 	// Use this for initialization
 
     void Awake()
     {
+        //array keep walls activity
+        walls = new bool[4] { true, true, true, true };
+        wallsArray = new GameObject[4];
+        neighbours = new GameObject[4] {null,null,null,null};
+        floorType = 0;
 
+        //someday make this array private to use it in removeWall function
+        List<GameObject> childrens = new List<GameObject>();
+        foreach (Transform child in transform)
+        {
+            childrens.Add(child.gameObject);
+        }
+        for (int i = 0; i < wallsArray.Length; i++)
+        {
+            wallsArray[i] = childrens[i];
+        }
     }
 
 	void Start () {
-
+        
         
 
         isWaiting = false;
@@ -76,6 +97,8 @@ public class Room : MonoBehaviour {
         //random directions to create next room
         setDirections();
 
+
+        
 
 
 	}
@@ -123,7 +146,7 @@ public class Room : MonoBehaviour {
                     isWaiting = false;
 
                     RoomManager.addRoom(roomObj);
-
+                    neighbours[0] = roomObj;
 
 
                     RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
@@ -151,6 +174,7 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+                    neighbours[1] = roomObj;
 
                     RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
@@ -172,6 +196,7 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+                    neighbours[2] = roomObj;
 
                     RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
@@ -193,6 +218,7 @@ public class Room : MonoBehaviour {
 
                     isWaiting = false;
                     RoomManager.addRoom(roomObj);
+                    neighbours[3] = roomObj;
 
                     RoomManager.setRoomWay(gameObject, roomObj, roomsCreated);
                     
@@ -252,13 +278,14 @@ public class Room : MonoBehaviour {
     {
         if (_direction.Equals(Direction.N))
         {
-
+            
             List<GameObject> childrens = new List<GameObject>();
             foreach (Transform child in transform)
             {
                 childrens.Add(child.gameObject);
             }
             //Destroy(childrens[0]);
+            walls[0] = false;
             childrens[0].SetActive(false);
             if (!keepCollums)
             {
@@ -278,6 +305,7 @@ public class Room : MonoBehaviour {
                 childrens.Add(child.gameObject);
             }
             //Destroy(childrens[1]);
+            walls[1] = false;
             childrens[1].SetActive(false);
             if (!keepCollums)
             {
@@ -296,6 +324,7 @@ public class Room : MonoBehaviour {
                 childrens.Add(child.gameObject);
             }
             //Destroy(childrens[2]);
+           walls[2] = false;
             childrens[2].SetActive(false);
             if (!keepCollums)
             {
@@ -314,6 +343,7 @@ public class Room : MonoBehaviour {
                 childrens.Add(child.gameObject);
             }
             //Destroy(childrens[3]);
+            walls[3] = false;
             childrens[3].SetActive(false);
             if (!keepCollums)
             {
