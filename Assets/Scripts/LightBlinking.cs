@@ -14,7 +14,7 @@ public class LightBlinking : MonoBehaviour {
     float timer;
 
 	void Start () {
-        delta = Random.Range(0.2f, .5f);
+        delta = Random.Range(0.1f, .3f);
         timer = 0;
 
         if (Random.Range(0, 100) > 90)

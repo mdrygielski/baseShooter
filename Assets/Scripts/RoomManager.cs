@@ -219,23 +219,84 @@ public class RoomManager : MonoBehaviour {
                             GameObject roomConnector = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/roomConnector"));
                             roomConnector.transform.parent = roomObj.transform;
 
+                            GameObject laserBeam = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/laserBeam"));
+                            laserBeam.transform.parent = roomObj.transform;
+
+                            //random side for laserBeam, even or odd
+                            bool beamLeftSide = Random.Range(0,100)%2==0?true:false;
+
+
                             if (n == 0)
                             {
+                                //put connector
                                 roomConnector.transform.localPosition = new Vector3(0,0.1f,0.5f);
                                 roomConnector.transform.Rotate(Vector3.up, -90f);
+
+
+                                //put laser beam
+                                if (beamLeftSide)
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(-.41f, 1, .5f);
+                                    laserBeam.transform.Rotate(Vector3.up, 90f);
+                                }
+                                else
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(.41f, 1, .5f);
+                                    laserBeam.transform.Rotate(Vector3.up, -90f);
+                                }
                             }else
                             if (n == 1)
                             {
+                                //put connector
                                 roomConnector.transform.localPosition = new Vector3(0.5f, 0.1f, 0);
+
+
+                                //put laser beam
+                                if (beamLeftSide)
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(.5f, 1, -.41f);
+                                }
+                                else
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(.5f, 1, .41f);
+                                    laserBeam.transform.Rotate(Vector3.up, 180f);
+                                }
                             }else
                             if (n == 2)
                             {
+                                //put connector
                                 roomConnector.transform.localPosition = new Vector3(0, 0.1f, -0.5f);
                                 roomConnector.transform.Rotate(Vector3.up, -90f);
+
+
+                                //put laser beam
+                                if (beamLeftSide)
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(-.41f, 1, -.5f);
+                                    laserBeam.transform.Rotate(Vector3.up, 90f);
+                                }
+                                else
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(.41f, 1, -.5f);
+                                    laserBeam.transform.Rotate(Vector3.up, -90f);
+                                }
                             }else
                             if (n == 3)
                             {
+                                //put connector
                                 roomConnector.transform.localPosition = new Vector3(-0.5f, 0.1f, 0);
+
+
+                                //put laser beam
+                                if (beamLeftSide)
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(-.5f, 1, -.41f);
+                                }
+                                else
+                                {
+                                    laserBeam.transform.localPosition = new Vector3(-.5f, 1, .41f);
+                                    laserBeam.transform.Rotate(Vector3.up, 180f);
+                                }
                             }
 
                         }
@@ -286,7 +347,7 @@ public class RoomManager : MonoBehaviour {
             }
 
         }
-        insertConnectors();
+        
 
     }
 
@@ -351,10 +412,10 @@ public class RoomManager : MonoBehaviour {
 
 
 
-    void decorateRooms()
+    void spawnLights()
     {
         
-        decorateFloor();
+        
         for (int i = 0; i < corridors.Count; i++){
             List<GameObject> corridor = corridors[i];
 
@@ -530,7 +591,7 @@ public class RoomManager : MonoBehaviour {
 
         }
 
-        insertKeyAndExit();
+        
     }
 
 
@@ -568,14 +629,36 @@ public class RoomManager : MonoBehaviour {
         Debug.Log("exit:" + exitRoom + "key:" + keyRoom);
         cleanRoom(exitRoom);
 
-        GameObject exit = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/mazePortal"));
-        exit.transform.parent = exitRoom.transform;
-        exit.transform.localPosition = new Vector3(0,.2f,0);
+        GameObject exitPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/mazePortal"));
+        exitPrefab.transform.parent = exitRoom.transform;
+        exitPrefab.transform.localPosition = new Vector3(0, .2f, 0);
 
-        GameObject key = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/card"));
-        key.transform.parent = keyRoom.transform;
-        key.transform.localPosition = new Vector3(0, 1f, 0);
+        GameObject keyPrefab = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/card"));
+        keyPrefab.transform.parent = keyRoom.transform;
+        keyPrefab.transform.localPosition = new Vector3(0, 1f, 0);
+
+        Material floorMaterial = (Material)Instantiate(Resources.Load("Materials/Scenery/floor3"));
+        exitRoom.GetComponent<Renderer>().material = floorMaterial;
+        keyRoom.GetComponent<Renderer>().material = floorMaterial;
+
+        Room exit = exitRoom.GetComponent<Room>();
+        Room parentExit = exit.parent.GetComponent<Room>();
+        exit.floorType = 3;
+        parentExit.floorType = 3;
+        exit.parent.GetComponent<Renderer>().material = floorMaterial;
+
         
+
+        /*
+        foreach (GameObject neighbour in exit.neighbours)
+        {
+            if (neighbour != null)
+            {
+                neighbour.GetComponent<Renderer>().material = floorMaterial;
+                
+            }
+        }
+        */
 
     }
 
@@ -596,6 +679,17 @@ public class RoomManager : MonoBehaviour {
 
     }
 
+    void decorate()
+    {
+        //lights & crates
+        spawnLights();
+        decorateFloor();
+        insertKeyAndExit();
+
+        insertConnectors();
+
+    }
+
 
 
     void Update()
@@ -610,7 +704,8 @@ public class RoomManager : MonoBehaviour {
                 {
                     Debug.Log("Rooms decorated");
                     //here call decoration function
-                    decorateRooms();
+                    decorate();
+                    
                 }
                 roomsDecorated = true;
             }
