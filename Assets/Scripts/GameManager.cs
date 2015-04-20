@@ -9,22 +9,28 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
     public static NetworkManager networkManager;
     public static GameObject gameManager;
 
+    public static List<GameObject> players;
+
 
 	// Use this for initialization
 	void Start () {
         networkManager =  gameObject.AddComponent<NetworkManager>();
-        
+        players = new List<GameObject>();
 
         //this is instance of GameManager
         gameManager = gameObject;
 
 
 	}
+    public static GameObject getPlayer(int index){
+        return players[index];
+    }
     
     public static int createMap(int seed){
         Debug.Log("Creating Map");

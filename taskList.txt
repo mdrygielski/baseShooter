@@ -1,5 +1,5 @@
 + generacja mapy
-- deokorowanie mapy
++ deokorowanie mapy
 - spawn enemy
 - AI
 - minimapa
@@ -8,12 +8,15 @@
 - cechy gracza
 - rodzaje broni
 - logika gry
-- mechanika klucz-drzwi (na bazie drzewa), wêz³y
++ mechanika klucz-drzwi (na bazie drzewa), wêz³y
 - menu
 - GUI
++ laser na przejsciach pomiedzy pomieszczeniami
 - interakcja z otoczeniem
 + kontroler gracza (podstawowy)
 - strzelanie
 - dekoracja modelu gracza
 - dekoraja modelow przeciwników
 - animacja
+
+//GameManager contains instances of connected players

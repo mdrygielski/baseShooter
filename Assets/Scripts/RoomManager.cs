@@ -678,6 +678,31 @@ public class RoomManager : MonoBehaviour {
         }
 
     }
+    void insertSpawners()
+    {
+        for (int i = 0; i < corridors.Count; i++)
+        {
+            List<GameObject> corridor = corridors[i];
+
+
+            for (int r = 0; r < corridor.Count; r++)
+            {
+
+                    GameObject roomObj = corridor[r];
+                    Room room = roomObj.GetComponent<Room>();
+                    if (!room.isInitRoom)
+                    {
+                        GameObject enemySpawnerObj = (GameObject)Instantiate(Resources.Load("Prefabs/Scene/enemySpawner"));
+                        enemySpawnerObj.transform.parent = roomObj.transform;
+                        enemySpawnerObj.transform.localPosition = new Vector3(0, 1.5f, 0);
+
+                    }
+                
+            }
+
+        }
+
+    }
 
     void decorate()
     {
@@ -687,6 +712,8 @@ public class RoomManager : MonoBehaviour {
         insertKeyAndExit();
 
         insertConnectors();
+        insertSpawners();
+
 
     }
 

@@ -155,7 +155,8 @@ public class NetworkManager : MonoBehaviour {
     {
         //create player prefab on sceen, thats all for now
         Debug.Log("Spawning player");
-        Network.Instantiate(Resources.Load("Prefabs/Player"),new Vector3(0,1,0),Quaternion.identity,0);
+        GameObject instanceOfPlayer = (GameObject)Network.Instantiate(Resources.Load("Prefabs/Player"),new Vector3(0,1,0),Quaternion.identity,0);
+        GameManager.players.Add(instanceOfPlayer);
     }
 
 
